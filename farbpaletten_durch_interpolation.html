@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Farbpaletten durch Interpolation</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: sans-serif;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let colorsStart = [];
+      let colorsEnd = [];
+
+      function setup() {
+        createCanvas(800, 400); // dubbel zo breed
+        noStroke();
+
+        colorMode(HSB, 100, 100, 100);
+        for (let i = 0; i < 10; i++) {
+          colorsStart.push(color(i * 10, 100, 100));      // van rood naar geel
+          colorsEnd.push(color(100, i * 10, 100));        // van wit naar paarsachtig
+        }
+      }
+
+      function draw() {
+        background(255);
+        let tileCountX = int(map(constrain(mouseX, 0, width), 0, width, 2, 50));
+        let tileCountY = int(map(constrain(mouseY, 0, height), 0, height, 2, 10));
+        let tileWidth = width / 2 / tileCountX;  // elk grid is de helft van de canvas
+        let tileHeight = height / tileCountY;
+
+        // ------ LINKER GRID (RGB INTERPOLATIE) ------
+        colorMode(RGB, 255); // RGB kleurmodel
+
+        for (let y = 0; y < tileCountY; y++) {
+          let col1 = colorsStart[y];
+          let col2 = colorsEnd[y];
+
+          for (let x = 0; x < tileCountX; x++) {
+            let amt = map(x, 0, tileCountX - 1, 0, 1);
+            let interCol = lerpColor(col1, col2, amt);
+            fill(interCol);
+            rect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+          }
+        }
+
+        // ------ RECHTER GRID (HSB INTERPOLATIE) ------
+        colorMode(HSB, 100, 100, 100); // HSB kleurmodel
+
+        for (let y = 0; y < tileCountY; y++) {
+          let col1 = colorsStart[y];
+          let col2 = colorsEnd[y];
+
+          for (let x = 0; x < tileCountX; x++) {
+            let amt = map(x, 0, tileCountX - 1, 0, 1);
+            let interCol = lerpColor(col1, col2, amt);
+            fill(interCol);
+            let px = width / 2 + x * tileWidth; // rechterhelft
+            let py = y * tileHeight;
+            rect(px, py, tileWidth, tileHeight);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
