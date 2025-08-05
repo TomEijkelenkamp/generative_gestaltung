@@ -2,12 +2,20 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>Farbspektrum im Kreis</title>
+    <title>Farbspektrum im Raster</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
       body {
         font-family: sans-serif;
         background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       canvas {
         display: block;
@@ -27,8 +35,8 @@
       }
 
       function draw() {
-        stepX = mouseX + 2;
-        stepY = mouseY + 2;
+        stepX = constrain(mouseX + 2, 2, width);
+        stepY = constrain(mouseY + 2, 2, height);
         
         for (var gridY = 0; gridY < height; gridY += stepY) {
           for (var gridX = 0; gridX < width; gridX += stepX) {
